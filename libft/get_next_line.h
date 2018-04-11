@@ -1,45 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filler.h                                           :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nobrien <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/03 14:56:56 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/03 14:57:43 by nobrien          ###   ########.fr       */
+/*   Created: 2018/02/24 14:08:37 by nobrien           #+#    #+#             */
+/*   Updated: 2018/04/05 12:56:54 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __FILLER_H__
-# define __FILLER_H__
+#ifndef __GET_NEXT_LINE_H
+# define __GET_NEXT_LINE_H
 
-# include "../libft/libft.h"
+# include <stdlib.h>
 # include <unistd.h>
+# include "libft.h"
 
-typedef struct s_piece
-{
-	int		x;
-	int		y;
-	char	**shape;
-}				t_piece;
-
-
-typedef struct	s_env
-{
-	char	letter;
-	char	opponent;
-	int		wwidth;
-	int		wheight;
-	char	**map;
-	t_piece	piece;
-	int		tx;
-	int		ty;
-	int		mx;
-	int		my;
-	int		xinc;
-	int		yinc;
-
-	FILE	*fd;//for debugging only
-}				t_env;
+int		ft_get_next_line(const int fd, char **line);
 
 #endif
