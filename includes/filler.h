@@ -34,10 +34,12 @@ typedef struct	s_env
 	t_piece	piece;
 	int		tx;
 	int		ty;
-	int		mx;
-	int		my;
-	int		xinc;
-	int		yinc;
+	// int		mx;
+	// int		my;
+	// int		xinc;
+	// int		yinc;
+	int			bestx;
+	int			besty;
 
 	FILE	*fd;//for debugging only
 }				t_env;

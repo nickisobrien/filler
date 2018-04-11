@@ -77,52 +77,36 @@ int		can_place(t_env *g, int y, int x)
 	return (0);
 }
 
-int		xplace_piece(t_env *g, int sy, int sx)
+int		place_piece(t_env *g, int (cmp)(t_env *g, int x, int y))
 {
 	int x;
 	int y;
-	int px;
-	int py;
+	int found;
 
-	y = sy;
-	while (y != 0 - g->piece.y - 1 && y != g->wheight + 1)
+	found = 0;
+	y = 0 - g->piece.y;
+	while (y < g->wheight)
 	{
-		x = sx;
-		while (x != 0 - g->piece.x - 1 && x != g->wwidth + 1)
+		x = 0 - g->piece.x;
+		while (x < g->wwidth)
 		{
 			if (can_place(g, y, x))
 			{
-				ft_printf("%d %d\n", y, x);
-				return (1);
+				found = 1;
+				if ((*cmp)(g, x, y))
+				{
+					g->bestx = x;
+					g->besty = y;
+				}
 			}
-			x += g->xinc;
+			x++;
 		}
-		y += g->yinc;
+		y++;
 	}
-	return (0);
-}
-
-int		yplace_piece(t_env *g, int sy, int sx)
-{
-	int x;
-	int y;
-	int px;
-	int py;
-
-	x = sx;
-	while (x != 0 - g->piece.x - 1 && x != g->wwidth + 1)
+	if (found)
 	{
-		y = sy;
-		while (y != 0 - g->piece.y - 1 && x != g->wheight + 1)
-		{
-			if (can_place(g, y, x))
-			{
-				ft_printf("%d %d\n", y, x);
-				return (1);
-			}
-			y += g->yinc;
-		}
-		x += g->xinc;
+		ft_printf("%d %d\n", g->besty, g->bestx);
+		return (1);
 	}
 	return (0);
 }
@@ -132,6 +116,21 @@ int		yplace_piece(t_env *g, int sy, int sx)
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
 
 //what would be considered better placement than the other?
+
+int		cmp(t_env *g, int x, int y)
+{
+	int a;
+	int b;
+
+	if (!g->bestx && !g->besty)
+		return (1);
+	a = ((g->bestx - g->tx)*(g->bestx - g->tx)) + ((g->besty - g->ty)*(g->besty - g->ty));
+	b = ((x - g->tx)*(x - g->tx)) + ((y - g->ty)*(y - g->ty));
+	if (ft_abs(b) < ft_abs(a))
+		return (1);
+	else
+		return (0);
+}
 
 void	get_opp_last_placement(t_env *g)
 {
@@ -161,60 +160,19 @@ void	get_opp_last_placement(t_env *g)
 	}
 }
 
-void	get_my_last_placement(t_env *g)
-{
-	int i;
-	int j;
-
-	i = 0;
-	while (g->map[i])
-	{
-		j = 0;
-		while (g->map[i][j])
-		{
-			if (g->map[i][j] == ft_tolower(g->letter))
-			{
-				g->mx = j;
-				g->my = i;
-				return ;
-			}
-			else if (g->map[i][j] == ft_toupper(g->letter))
-			{
-				g->mx = j;
-				g->my = i;
-			}
-			j++;
-		}
-		i++;
-	}
-}
-
 int		get_placement(t_env *g)
 {
 	int x;
 	int y;
 
 	get_opp_last_placement(g);
-	get_my_last_placement(g);
-	y = (g->my > g->ty) ? 0 - g->piece.y : g->wheight;
-	g->yinc = (g->my > g->ty) ? 1 : -1;
-	x = (g->mx > g->tx) ? 0 - g->piece.x : g->wwidth;
-	g->xinc = (g->mx > g->tx) ? 1 : -1;
-	fprintf(g->fd, "g->xinc:%d g->yinc:%d x:%d y:%d\n", g->xinc, g->yinc, x, y);
-	if (ft_abs(g->my - g->ty) > ft_abs(g->mx - g->tx))
-	{
-		if (!(yplace_piece(g, y, x)))
-			return (0);
-	}
-	else
-	{
-		if (!(xplace_piece(g, y, x)))
-			return (0);
-	}
+	g->bestx = 0;
+	g->besty = 0;
+	if (!(place_piece(g, &cmp)))
+		return (0);
 	return (1);
 
 }
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                    READERS                      */
