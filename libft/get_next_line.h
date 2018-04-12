@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include "libft.h"
 
+# define BUFF_SIZE 124
 int		ft_get_next_line(const int fd, char **line);
 
 #endif

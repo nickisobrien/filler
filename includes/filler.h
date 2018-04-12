@@ -35,14 +35,32 @@ typedef struct	s_env
 	t_piece	piece;
 	int		tx;
 	int		ty;
-	// int		mx;
-	// int		my;
-	// int		xinc;
-	// int		yinc;
-	int			bestx;
-	int			besty;
+	int		bestx;
+	int		besty;
 
-	FILE	*fd;//for debugging only
+	FILE	*fd;//for debugging
 }				t_env;
+
+int		get_points(t_env *g, int x, int y);
+int		cmp(t_env *g, int x, int y);
+int		get_heat_number(t_env *g, int i, int j, int counter);
+void	calculate_heatmap(t_env *g);
+void	default_heatmap(t_env *g);
+int		get_placement(t_env *g);
+
+int		overflows(t_env *g, int y, int x);
+int		can_place(t_env *g, int y, int x);
+int		place_piece(t_env *g, int (cmp)(t_env *g, int x, int y));
+
+void	mappiecetodebugger(t_env *g);
+FILE	*debugger(void);
+
+int		malloc_piece(t_env *g);
+int		malloc_heatmap(t_env *g);
+int		malloc_map(t_env *g);
+
+void	get_piece(t_piece *p);
+void	default_map(t_env *g);
+void	get_dim(t_env *g);
 
 #endif
