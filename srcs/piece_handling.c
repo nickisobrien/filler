@@ -40,7 +40,7 @@ int		can_place(t_env *g, int y, int x)
 		{
 			if (g->piece.shape[i][j] == '*')
 			{
-				if (i + y < 0 || i + y >= g->wheight || j + x < 0 || j + x >= g->wwidth)//might need abs?
+				if (i + y < 0 || i + y >= g->wheight || j + x < 0 || j + x >= g->wwidth)
 					return (0);
 				if (g->map[i + y][j + x] == g->letter)
 				{

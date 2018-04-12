@@ -14,9 +14,7 @@ int		get_points(t_env *g, int x, int y)
 		while (j < g->piece.x)
 		{
 			if (g->piece.shape[i][j] == '*')
-			{
-				tot += g->hmap[i + y][j + x];	
-			}
+				tot += g->hmap[i + y][j + x];
 			j++;
 		}
 		i++;

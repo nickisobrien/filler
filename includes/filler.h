@@ -15,6 +15,7 @@
 
 # include "../libft/libft.h"
 # include <unistd.h>
+# include <fcntl.h>
 
 typedef struct s_piece
 {

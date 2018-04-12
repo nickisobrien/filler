@@ -1,6 +1,6 @@
 NAME = nobrien.filler
 
-SRC = srcs/main.c
+SRC = srcs/main.c srcs/algorithm.c srcs/debugger.c srcs/init.c srcs/piece_handling.c srcs/reader.c
 
 FLAGS = -Wall -Wextra -Werror
 
