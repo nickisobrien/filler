@@ -17,6 +17,51 @@
 //if no difference, can also count their free area 1 away from each, then 2 away from each, then 3...?
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
+/*               FILE DEBUGGING                    */
+/* * * * * * * * * * * * * * * * * * * * * * * * * */
+
+FILE	*debugger(void)
+{
+	FILE	*fd;
+
+	if (!(fd = fopen("file.txt", "w")))
+		return (NULL);
+	return (fd);
+}
+
+void	mappiecetodebugger(t_env *g)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (g->map[i])
+	{
+		fprintf(g->fd, "%s\n", g->map[i]);
+		i++;
+	}
+	i = 0;
+	while (i < g->piece.y)
+	{
+		fprintf(g->fd, "%s\n", g->piece.shape[i]);
+		i++;
+	}
+	fprintf(g->fd, "Heatmap:\n");
+	i = 0;
+	while (i < g->wheight)
+	{
+		j = 0;
+		while (j < g->wwidth)
+		{
+			fprintf(g->fd, "%3d", g->hmap[i][j]);
+			j++;
+		}
+		fprintf(g->fd,"\n");
+		i++;
+	}
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                 PIECE HANDLING                  */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -115,45 +160,97 @@ int		place_piece(t_env *g, int (cmp)(t_env *g, int x, int y))
 /*                   ALGORITHM                     */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
 
-//what would be considered better placement than the other?
+int		get_points(t_env *g, int x, int y)
+{
+	int i;
+	int j;
+	int tot;
+
+	tot = 0;
+	i = 0;
+	while (g->piece.shape[i])
+	{
+		j = 0;
+		while (g->piece.shape[i][j])
+		{
+			if (g->piece.shape[i][j] == '*')
+			{
+				tot += g->hmap[i + y][j + x];	
+			}
+			j++;
+		}
+		i++;
+	}
+	return (tot);
+}
 
 int		cmp(t_env *g, int x, int y)
 {
-	int a;
-	int b;
-
 	if (!g->bestx && !g->besty)
 		return (1);
-	a = ((g->bestx - g->tx)*(g->bestx - g->tx)) + ((g->besty - g->ty)*(g->besty - g->ty));
-	b = ((x - g->tx)*(x - g->tx)) + ((y - g->ty)*(y - g->ty));
-	if (ft_abs(b) < ft_abs(a))
+	if (get_points(g, g->bestx, g->besty) > get_points(g, x, y))
 		return (1);
-	else
-		return (0);
+	return (0);
 }
 
-void	get_opp_last_placement(t_env *g)
+int		get_heat_number(t_env *g, int i, int j, int counter)
+{
+	if (i > 0 && (g->hmap[i - 1][j] == counter))
+		return (1);
+	if (j > 0 && (g->hmap[i][j - 1] == counter))
+		return (1);
+	if (j != g->wwidth - 1 && (g->hmap[i][j + 1] == counter))
+		return (1);
+	if (i != g->wheight - 1 && (g->hmap[i + 1][j] == counter))
+		return (1);
+	return (0);
+}
+
+void	calculate_heatmap(t_env *g)
+{
+	int i;
+	int j;
+	int counter;
+
+	counter = 0;
+	while (counter < (g->wwidth * g->wheight))
+	{
+		i = 0;
+		while (i < g->wheight)
+		{
+			j = 0;
+			while (j < g->wwidth)
+			{
+				if (g->hmap[i][j] == -1)
+				{
+					if (get_heat_number(g, i, j, counter))
+						g->hmap[i][j] = counter + 1;
+				}
+				j++;
+			}
+			i++;
+		}
+		counter++;
+	}
+}
+
+void	default_heatmap(t_env *g)
 {
 	int i;
 	int j;
 
 	i = 0;
-	while (g->map[i])
+	while (i < g->wheight)
 	{
 		j = 0;
-		while (g->map[i][j])
+		while (j < g->wwidth)
 		{
-			if (g->map[i][j] == ft_tolower(g->opponent))
-			{
-				g->tx = j;
-				g->ty = i;
-				return ;
-			}
-			else if (g->map[i][j] == ft_toupper(g->opponent))
-			{
-				g->tx = j;
-				g->ty = i;
-			}
+			if (ft_tolower(g->map[i][j]) == ft_tolower(g->opp))
+				g->hmap[i][j] = 0;
+			else if (ft_tolower(g->map[i][j]) == ft_tolower(g->letter))
+				g->hmap[i][j] = -2;
+			else
+				g->hmap[i][j] = -1;
 			j++;
 		}
 		i++;
@@ -162,12 +259,11 @@ void	get_opp_last_placement(t_env *g)
 
 int		get_placement(t_env *g)
 {
-	int x;
-	int y;
-
-	get_opp_last_placement(g);
 	g->bestx = 0;
 	g->besty = 0;
+	default_heatmap(g);
+	calculate_heatmap(g);
+	mappiecetodebugger(g);
 	if (!(place_piece(g, &cmp)))
 		return (0);
 	return (1);
@@ -197,19 +293,19 @@ void	get_piece(t_piece *p)
 	}
 }
 
-void	set_map(t_env *g)
+void	set_map(t_env *g)//change this to simply initializing int map
 {
 	int i;
 	char *str;
 
 	i = 0;
 	ft_get_next_line(0, &str);
-	ft_strdel(&str);
+	ft_strdel(&str);//PROBABLY MALLOC ERROR SOURCE
 	while (i < g->wheight)
 	{
 		ft_get_next_line(0, &str);
 		strncpy(g->map[i], str + 4, (size_t)g->wwidth);
-		ft_strdel(&str);
+		ft_strdel(&str);//PROBABLY MALLOC ERROR SOURCE
 		i++;
 	}
 }
@@ -217,6 +313,22 @@ void	set_map(t_env *g)
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                     INIT                        */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void	init_heatmap(t_env *g)
+{
+	int i;
+	int j;
+
+	i = 0;
+	if (!(g->hmap = malloc(sizeof(int *) * g->wheight)))
+		return ;
+	while (i < g->wheight)
+	{
+		if (!(g->hmap[i] = malloc(sizeof(int) * g->wwidth)))
+			return ;
+		i++;
+	}
+}
 
 void	malloc_map(t_env *g)
 {
@@ -242,37 +354,6 @@ void	get_dim(t_env *g)
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
-/*               FILE DEBUGGING                    */
-/* * * * * * * * * * * * * * * * * * * * * * * * * */
-
-FILE	*debugger(void)
-{
-	FILE	*fd;
-
-	if (!(fd = fopen("file.txt", "w")))
-		return (NULL);
-	return (fd);
-}
-
-void	mappiecetodebugger(t_env *g)
-{
-	int i;
-
-	i = 0;
-	while (g->map[i])
-	{
-		fprintf(g->fd, "%s\n", g->map[i]);
-		i++;
-	}
-	i = 0;
-	while (i < g->piece.y)
-	{
-		fprintf(g->fd, "%s\n", g->piece.shape[i]);
-		i++;
-	}
-}
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * */
 /*                     MAINS                       */
 /* * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -284,14 +365,14 @@ int		main(void)
 	global.fd = debugger();
 	ft_get_next_line(0, &line);
 	global.letter = (ft_atoi(line + 10) == 1) ? 'O' : 'X';
-	global.opponent = (global.letter == 'X') ? 'O' : 'X';
+	global.opp = (global.letter == 'X') ? 'O' : 'X';
 	get_dim(&global);
 	malloc_map(&global);
+	init_heatmap(&global);
 	while (1)
 	{
 		set_map(&global);
 		get_piece(&(global.piece));
-		mappiecetodebugger(&global);
 		if (!(get_placement(&global))) //need to check leaks? get rid of the break
 			break ;
 		ft_get_next_line(0, &line);//reading "Plateau", don't need it, just reading it

@@ -27,10 +27,11 @@ typedef struct s_piece
 typedef struct	s_env
 {
 	char	letter;
-	char	opponent;
+	char	opp;
 	int		wwidth;
 	int		wheight;
 	char	**map;
+	int		**hmap;
 	t_piece	piece;
 	int		tx;
 	int		ty;
