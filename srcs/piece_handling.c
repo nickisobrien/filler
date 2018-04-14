@@ -1,35 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   piece_handling.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/04/12 14:47:23 by nobrien           #+#    #+#             */
+/*   Updated: 2018/04/14 11:23:41 by nobrien          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/filler.h"
-
-int		overflows(t_env *g, int y, int x)
-{
-	int i;
-	int j;
-
-	i = 0;
-	while (i < g->piece.y)
-	{
-		j = 0;
-		while (j < g->piece.x)
-		{
-			if (g->piece.shape[i][j] == '*')
-			{
-				if (i + y >= g->wheight || i + y < 0)
-					return (1);
-				else if (j + x >= g->wwidth || j + x < 0)
-					return (1);
-			}
-			j++;
-		}
-		i++;
-	}
-	return (0);
-}
 
 int		can_place(t_env *g, int y, int x)
 {
 	int i;
 	int j;
 	int overlaps;
+	int xadd;
+	int yadd;
 
 	i = 0;
 	overlaps = 0;
@@ -38,17 +27,23 @@ int		can_place(t_env *g, int y, int x)
 		j = 0;
 		while (j < g->piece.x)
 		{
+			xadd = 0;
+			yadd = 0;
 			if (g->piece.shape[i][j] == '*')
 			{
-				if (i + y < 0 || i + y >= g->wheight || j + x < 0 || j + x >= g->wwidth)
+				if (j + x >= g->wwidth || i + y >= g->wheight)
 					return (0);
-				if (g->map[i + y][j + x] == g->letter)
+				if (i + y < 0)
+					yadd = g->wheight;
+				if (j + x < 0)
+					xadd = g->wwidth;
+				if (g->map[i + y + yadd][j + x + xadd] == g->letter)
 				{
 					overlaps++;
 					if (overlaps > 1)
 						return (0);
 				}
-				else if (g->piece.shape[i][j] == '*' && g->map[i + y][j + x] != '.')
+				else if (g->piece.shape[i][j] == '*' && g->map[i + y + yadd][j + x + xadd] != '.')
 					return (0);
 			}
 			j++;

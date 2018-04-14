@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   reader.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/04/12 14:39:05 by nobrien           #+#    #+#             */
+/*   Updated: 2018/04/14 11:23:39 by nobrien          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/filler.h"
 
 void	get_piece(t_piece *p)
@@ -32,7 +44,7 @@ void	default_map(t_env *g)
 	str = NULL;
 	ft_get_next_line(0, &str);
 	if (str != NULL)
-		ft_strdel(&str);//MALLOC ERROR SOURCE 1
+		ft_strdel(&str);
 	while (i < g->wheight)
 	{
 		str = NULL;
