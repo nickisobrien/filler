@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/12 14:39:05 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/14 11:23:39 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/14 13:12:39 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	get_piece(t_piece *p)
 {
-	char *str;
-	int i;
-	char *ptr;
+	char	*str;
+	int		i;
+	char	*ptr;
 
 	str = NULL;
 	ft_get_next_line(0, &str);
@@ -37,8 +37,8 @@ void	get_piece(t_piece *p)
 
 void	default_map(t_env *g)
 {
-	int i;
-	char *str;
+	int		i;
+	char	*str;
 
 	i = 0;
 	str = NULL;
