@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/12 18:10:10 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/14 14:16:37 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/16 17:35:31 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void		default_heatmap(t_env *g)
 			if (ft_tolower(g->map[i][j]) == ft_tolower(g->opp))
 				g->hmap[i][j] = 0;
 			else if (ft_tolower(g->map[i][j]) == ft_tolower(g->letter))
-				g->hmap[i][j] = -2;
+				g->hmap[i][j] = g->wwidth * g->wheight;
 			else
 				g->hmap[i][j] = -1;
 		}
