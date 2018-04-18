@@ -15,6 +15,7 @@ clean:
 
 fclean: clean
 	rm -f ./libft/libft.a
+	rm -f ./libft/ft_printf/libftprintf.a
 	rm -f $(NAME)
 
 re: fclean all
