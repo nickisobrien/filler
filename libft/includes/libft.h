@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/22 15:52:02 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/05 12:56:40 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/19 22:54:29 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include "ft_printf/includes/ft_printf.h"
+# include "ft_printf.h"
 # include "get_next_line.h"
 
 typedef struct		s_list
@@ -104,5 +104,6 @@ long long			ft_abs(long long num);
 int					ft_wcharbytes(wchar_t w);
 int					ft_wstrbytes(wchar_t *str);
 int					ft_wstrlen(wchar_t *str);
+void				ft_printbits(unsigned char octet);
 
 #endif

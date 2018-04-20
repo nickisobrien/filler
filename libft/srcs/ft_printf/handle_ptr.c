@@ -1,36 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_float.c                                     :+:      :+:    :+:   */
+/*   handle_ptr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/04/02 11:37:02 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/02 14:39:46 by nobrien          ###   ########.fr       */
+/*   Created: 2018/03/04 22:08:22 by nobrien           #+#    #+#             */
+/*   Updated: 2018/04/19 22:53:11 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_printf.h"
+#include "ft_printf.h"
 
-void		handle_float(double num, t_arg *args)
+void	handle_ptr(va_list ap, t_arg *args)
 {
-	int i;
-	int prec;
+	void	*ptr;
+	char	*str;
+	int		i;
 
-	if (num < 0)
-	{
-		add_char('-', args);
-		num = -num;
-	}
-	handle_int((intmax_t)num, args, 0);
-	num -= (intmax_t)num - 1;
-	add_char('.', args);
 	i = 0;
-	prec = (args->precision && args->precision != -1) ? args->precision : 6;
-	while (i < prec)
-	{
-		num *= 10;
-		add_char(((intmax_t)num % 10) + '0', args);
-		i++;
-	}
+	ptr = va_arg(ap, void *);
+	if (ptr == 0 && args->precision != -1)
+		str = ft_strdup("0");
+	else
+		str = ft_utoa_base((uintmax_t)ptr, 16);
+	str = hex_precision(str, args);
+	ptr = str;
+	str = ft_strjoin("0x", str);
+	free(ptr);
+	str = handle_width(str, args);
+	while (str[i])
+		add_char(str[i++], args);
+	free(str);
 }

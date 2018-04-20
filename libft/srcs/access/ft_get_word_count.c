@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_get_word_count.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nobrien <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/02/24 14:08:37 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/18 15:32:35 by nobrien          ###   ########.fr       */
+/*   Created: 2018/02/23 09:01:28 by nobrien           #+#    #+#             */
+/*   Updated: 2018/04/19 22:50:38 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __GET_NEXT_LINE_H
-# define __GET_NEXT_LINE_H
+#include "libft.h"
 
-# include <stdlib.h>
-# include <unistd.h>
-# include "libft.h"
+int	ft_get_word_count(char const *s, char c)
+{
+	int num;
 
-# define BUFF_SIZE 124
-
-int		ft_get_next_line(const int fd, char **line);
-
-#endif
+	num = 0;
+	while (*s)
+	{
+		if (*s != c)
+		{
+			num++;
+			while (*s != c && *s != '\0')
+				s++;
+		}
+		else
+			s++;
+	}
+	return (num);
+}

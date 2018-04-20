@@ -14,8 +14,7 @@ clean:
 	@make -C ./libft clean
 
 fclean: clean
-	rm -f ./libft/libft.a
-	rm -f ./libft/ft_printf/libftprintf.a
+	@make -C ./libft fclean
 	rm -f $(NAME)
 
 re: fclean all
