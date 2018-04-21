@@ -6,7 +6,7 @@
 /*   By: nobrien <nobrien@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/12 18:10:10 by nobrien           #+#    #+#             */
-/*   Updated: 2018/04/16 17:35:31 by nobrien          ###   ########.fr       */
+/*   Updated: 2018/04/20 20:43:09 by nobrien          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,14 @@ void		calculate_heatmap(t_env *g,
 	int i;
 	int j;
 	int counter;
+	int changed;
 
 	counter = -1;
-	while (++counter < (g->wwidth * g->wheight))
+	changed = 1;
+	while (changed)
 	{
+		changed = 0;
+		counter++;
 		i = -1;
 		while (++i < g->wheight)
 		{
@@ -71,7 +75,10 @@ void		calculate_heatmap(t_env *g,
 				if (g->hmap[i][j] == -1)
 				{
 					if ((get_heat_number)(g, i, j, counter))
+					{
 						g->hmap[i][j] = counter + 1;
+						changed = 1;
+					}
 				}
 			}
 		}
